@@ -22,7 +22,7 @@ class SecureView: View("Secure Screen") {
             vbox(spacing = 15) {
                 alignment = Pos.CENTER
 
-                label("Successfully logged id")
+                label("Successfully logged in")
 
                 hbox {
                     alignment = Pos.CENTER

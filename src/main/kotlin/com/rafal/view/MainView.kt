@@ -2,35 +2,32 @@ package com.rafal.view
 
 import com.rafal.MIN_HEIGHT
 import com.rafal.MIN_WIDTH
-import com.rafal.app.Styles
 import javafx.animation.KeyFrame
 import javafx.animation.Timeline
 import javafx.event.EventHandler
+import javafx.scene.control.TabPane
 import javafx.util.Duration
 import tornadofx.*
 
-class LoginView : View("Insecure Passwords Holder") {
-    override val root = form {
-        label(title) {
-            addClass(Styles.heading)
-        }
+class MainView : View("Passwords Holder") {
+
+    private val encryptedDataTabView: UnauthorizedTabView by inject()
+
+    override val root = tabpane {
         minWidth = MIN_WIDTH
         minHeight = MIN_HEIGHT
 
-        addClass(Styles.loginScreen)
-        fieldset {
-            field("Username") {
-                textfield {  }
-            }
-            field("Password") {
-                passwordfield {  }
-            }
+        tabClosingPolicy = TabPane.TabClosingPolicy.UNAVAILABLE
+
+        tab(messages["data_tab"]) {
+            add(encryptedDataTabView)
+        }
+        tab(messages["generator_tab"]) {
+
         }
 
-        button("Login") {
-            isDefaultButton = true
-        }
     }
+
 
     fun shakeStage() {
         var x = 0
@@ -40,6 +37,7 @@ class LoginView : View("Insecure Passwords Holder") {
         val keyframeDuration = Duration.seconds(0.04)
 
         val stage = FX.primaryStage
+
 
         val timelineX = Timeline(KeyFrame(keyframeDuration, EventHandler {
             if (x == 0) {

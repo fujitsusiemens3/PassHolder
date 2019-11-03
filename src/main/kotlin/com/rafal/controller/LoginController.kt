@@ -1,49 +1,45 @@
 package com.rafal.controller
 
 import com.rafal.PASSWORD
-import com.rafal.USERNAME
-import com.rafal.view.LoginView
+import com.rafal.database.DataRepository
+import com.rafal.view.MainView
 import com.rafal.view.SecureView
+import com.rafal.view.UnauthorizedTabView
 import tornadofx.*
 
 class LoginController: Controller() {
-    private val loginView: LoginView by inject()
+    private val unauthorizedTabView: UnauthorizedTabView by inject()
     private val secureView: SecureView by inject()
+    private val repo = DataRepository()
 
     fun init() {
-        with(config) {
-            if (containsKey(USERNAME) && containsKey(PASSWORD)) {
-                tryLogin(string(USERNAME), string(PASSWORD))
-            } else {
-                showLoginScreen("Please log in")
+        primaryStage.uiComponent<UIComponent>()?.replaceWith(MainView::class, sizeToScene = true, centerOnScreen = true)
+    }
+
+    private fun showLoginScreen() {
+        secureView.replaceWith(unauthorizedTabView, sizeToScene = true, centerOnScreen = true)
+    }
+
+    private fun showSecureScreen() {
+        unauthorizedTabView.replaceWith(secureView, sizeToScene = true, centerOnScreen = true)
+    }
+
+    fun tryLogin(key: String): Boolean {
+        if (key.isNotEmpty()) {
+            val savedPassword = repo.fetchMasterPassword()
+            if (savedPassword == key) {
+                showSecureScreen()
+                return true
             }
         }
-    }
-
-    fun showLoginScreen(message: String, shake: Boolean = false) {
-        secureView.replaceWith(loginView, sizeToScene = true, centerOnScreen = true)
-        runLater {
-            if (shake) {
-                loginView.shakeStage()
-            }
-        }
-    }
-
-    fun showSecureScreen() {
-        loginView.replaceWith(secureView, sizeToScene = true, centerOnScreen = true)
-    }
-
-    fun tryLogin(username: String, password: String): Boolean {
-        return true
+        return false
     }
 
     fun logout() {
         with(config) {
-            remove(USERNAME)
             remove(PASSWORD)
             save()
         }
-
-        showLoginScreen("Please log in")
+        showLoginScreen()
     }
 }
