@@ -1,5 +1,4 @@
-<h1># Password Holder # 
-##############</h1>
+<h1># Password Holder #</h1>
 
 Application requirements:
 
@@ -16,5 +15,5 @@ Application requirements:
 11. Database file selector
 
 ##############################
-technician stuff:
+Technician stuff:<br/>
 1. Composite design pattern to represent data view
